@@ -100,14 +100,17 @@
             "S2F9qR7V8wX0", "E4T5mZ9L1Q2V", "H6K8X5P2FqN0", "B1W9Z4S6Rj7F"
         ];
 
-        // Check if the user has visited before by using localStorage
+        // Check if the user has visited before or generated a key by using localStorage
         if (localStorage.getItem("keyGenerated")) {
             // If the key has been generated before, display the "Can't generate key" message
             document.getElementById("key-display").innerText = "Can't generate key. You've already received one!";
+            document.querySelector(".generate-btn").style.display = "none";  // Hide the button
         } else {
-            checkAccess();  // Fetch and display the key if it's the first visit
+            // First visit: show the "Generate New Key" button
+            document.querySelector(".generate-btn").style.display = "inline-block";
         }
 
+        // Function to check access and either generate a key or redirect the user
         function checkAccess() {
             // Generate a random key from the list
             const randomKey = keys[Math.floor(Math.random() * keys.length)];
@@ -115,8 +118,11 @@
             // Display the key
             document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
 
-            // Store in localStorage so that next time we know the key has already been generated
+            // Set flag in localStorage so that we know the key has been generated
             localStorage.setItem("keyGenerated", "true");
+
+            // Redirect the user to the URL after they click the "Generate New Key" button
+            window.location.href = "https://loot-link.com/s?a2bd3961";
         }
     </script>
 </body>
