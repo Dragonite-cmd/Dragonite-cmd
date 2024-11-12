@@ -3,150 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dragonite Key Validator</title>
+    <title>Dragon Key Generator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
         }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 400px;
+        body {
+            overflow: hidden;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             text-align: center;
         }
-        h1 {
-            color: #333;
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: -1;
+        }
+        .title {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #ff4c4c;
+            margin-bottom: 20px;
+            text-shadow: 0px 0px 10px rgba(255, 76, 76, 0.5);
+        }
+        .logo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 2px solid #ff4c4c;
+            padding: 10px;
+            transition: transform 0.2s ease;
+            box-shadow: 0px 0px 15px rgba(255, 76, 76, 0.8);
+        }
+        .logo:hover {
+            transform: scale(1.05);
         }
         .key-display {
+            font-size: 1.3em;
+            color: #e0e0e0;
+            background: #252525;
+            border: 1px solid #444;
+            padding: 15px 30px;
+            margin-top: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 76, 76, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+        .key-display:hover {
+            box-shadow: 0 0 20px rgba(255, 76, 76, 0.5);
+        }
+        .generate-btn {
             margin-top: 20px;
-            padding: 10px;
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d0e9c6;
-            border-radius: 5px;
-        }
-        .error-message {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
-            border-radius: 5px;
-        }
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #5bc0de;
-            color: white;
+            padding: 10px 25px;
+            font-size: 1.1em;
+            color: #fff;
+            background-color: #ff4c4c;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        button:hover {
-            background-color: #31b0d5;
+        .generate-btn:hover {
+            background-color: #ff3333;
+            box-shadow: 0px 0px 10px rgba(255, 76, 76, 0.5);
+        }
+        .bypass-message {
+            font-size: 1.3em;
+            color: #ff4c4c;
+            background: #252525;
+            border: 1px solid #444;
+            padding: 15px 30px;
+            margin-top: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 76, 76, 0.3);
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Dragonite Key Validator</h1>
-        
-        <!-- Bypass message for incorrect referrer -->
-        <div id="bypassMessage" class="error-message" style="display:none;"></div>
-        
-        <!-- Form to enter key -->
-        <input type="text" id="keyInput" placeholder="Enter your key here" />
-        <button id="validateBtn">Validate Key</button>
-
-        <!-- Display key -->
-        <div id="keysDisplay" class="key-display" style="display:none;"></div>
-    </div>
+    <div class="overlay"></div>
+    <div class="title">Dragonite Key System</div>
+    <img src="https://i.pinimg.com/736x/23/a3/9a/23a39a843046342c3385d03f9706ee8c.jpg" alt="Dragon Logo" class="logo">
+    <div class="key-display" id="key-display">Your Key: Fetching...</div>
+    <button class="generate-btn" onclick="checkAccess()">Generate New Key</button>
+    <div class="bypass-message" id="bypass-message">Bypass Detected: You were not sent from the correct link.</div>
 
     <script>
-        // Define the expected referrer link
-        const expectedReferrer = "https://link-target.net/1253586/dragonite-key";
+        const pastebinUrl = "https://pastebin.com/raw/DiDZQ56i"; 
 
-        // Check the referrer to see if the user came from the correct link
+        // The expected referrer link
+        const expectedReferrer = "https://link-target.net/1253586/dragonite-key";
         const referrer = document.referrer;
 
+        // Check if the user is coming from the expected referrer
         if (referrer !== expectedReferrer) {
-            document.getElementById("bypassMessage").innerText = "Bypass Detected: You were not sent from the correct link.";
-            document.getElementById("bypassMessage").style.display = "block";
+            document.getElementById("bypass-message").style.display = "block";  // Show bypass message
+            document.getElementById("key-display").innerText = "Bypass Detected: You cannot generate a key without coming from the correct link.";
+        } else {
+            checkAccess();  // Call the function to fetch a key if the referrer is correct
         }
 
-        // Array of keys to choose from
-        const keys = [
-            "G3Hg7kR9Jp5T",
-            "T9K3zJ2Jw4Qs",
-            "V7Y6dX8PjL1E",
-            "W2N5fQ9HrB8J",
-            "Z4B1sL0VhF3K",
-            "M8Q4pX5Tn3ZL",
-            "A1B7qY2JjN0U",
-            "F3Xz5Ck1L4Vp",
-            "J5W6yY0JbH7R",
-            "K2M8qV4ZnR0E",
-            "D9L0vB1H3TkF",
-            "P7Q4mZ2R6WjJ",
-            "O5N2dL9ZkV8F",
-            "U6P3sV0F5HqJ",
-            "T1N7yM9XvZ0G",
-            "L3J6pQ5Dk9N1",
-            "S2F9qR7V8wX0",
-            "E4T5mZ9L1Q2V",
-            "H6K8X5P2FqN0",
-            "B1W9Z4S6Rj7F"
-        ];
-
-        // Function to get a random key from the list
-        function getRandomKey() {
-            const randomIndex = Math.floor(Math.random() * keys.length);
-            return keys[randomIndex];
+        // Function to fetch the key from the link
+        async function checkAccess() {
+            try {
+                const response = await fetch(pastebinUrl);
+                const data = await response.text();
+                const keys = data.split("\n").filter(key => key.trim() !== "");
+                const randomKey = keys[Math.floor(Math.random() * keys.length)];
+                document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
+            } catch (error) {
+                console.error("Error fetching keys:", error);
+                document.getElementById("key-display").innerText = "Error retrieving key.";
+            }
         }
 
-        // Display the selected key in the 'keysDisplay' div
-        function displayKey() {
-            document.getElementById("keysDisplay").innerText = "Key: " + getRandomKey();
-            document.getElementById("keysDisplay").style.display = "block";
-        }
-
-        // Validate key function
-        document.getElementById("validateBtn").addEventListener("click", function () {
-            const userKey = document.getElementById("keyInput").value;
-
-            // Assuming this is the key validation check
-            if (userKey === getRandomKey()) {
-                alert("Access granted!");
-                displayKey();  // Display a new key
+        // If the user clicks the Generate New Key button
+        document.querySelector('.generate-btn').addEventListener('click', function() {
+            if (referrer === expectedReferrer) {
+                checkAccess();  // Only generate a new key if coming from the correct link
             } else {
-                alert("Invalid key");
+                document.getElementById("bypass-message").style.display = "block";
+                document.getElementById("key-display").innerText = "Bypass Detected: You cannot generate a key without coming from the correct link.";
             }
         });
-
-        // Optional: Allow pressing Enter to validate key
-        document.getElementById("keyInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                document.getElementById("validateBtn").click();
-            }
-        });
-
     </script>
-
 </body>
 </html>
