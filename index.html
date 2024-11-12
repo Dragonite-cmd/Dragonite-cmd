@@ -87,8 +87,8 @@
     <div class="overlay"></div>
     <div class="title">Dragonite Key System</div>
     <img src="https://i.pinimg.com/736x/23/a3/9a/23a39a843046342c3385d03f9706ee8c.jpg" alt="Dragon Logo" class="logo">
-    <div class="key-display" id="key-display">Your Key: Fetching...</div>
-    <button class="generate-btn" onclick="checkAccess()">Generate New Key</button>
+    <div class="key-display" id="key-display">Your Key: Waiting...</div>
+    <button class="generate-btn" onclick="generateKey()">Generate Key</button>
 
     <script>
         // List of keys
@@ -100,29 +100,35 @@
             "S2F9qR7V8wX0", "E4T5mZ9L1Q2V", "H6K8X5P2FqN0", "B1W9Z4S6Rj7F"
         ];
 
-        // Check if the user has visited before or generated a key by using localStorage
-        if (localStorage.getItem("keyGenerated")) {
-            // If the key has been generated before, display the "Can't generate key" message
-            document.getElementById("key-display").innerText = "Can't generate key. You've already received one!";
-            document.querySelector(".generate-btn").style.display = "none";  // Hide the button
-        } else {
-            // First visit: show the "Generate New Key" button
-            document.querySelector(".generate-btn").style.display = "inline-block";
+        // Check if key has been generated already in session storage
+        if (sessionStorage.getItem("keyGenerated")) {
+            // If a key was generated, show the key (do not allow re-generation)
+            document.getElementById("key-display").innerText = `Your Key: ${sessionStorage.getItem("generatedKey")}`;
+            document.querySelector(".generate-btn").innerText = "Already Generated - Click to Visit Link";  // Update button text
         }
 
-        // Function to check access and either generate a key or redirect the user
-        function checkAccess() {
-            // Generate a random key from the list
-            const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        function generateKey() {
+            // Check if key is already generated during this session
+            if (sessionStorage.getItem("keyGenerated")) {
+                // If key is already generated, just redirect the user
+                window.location.href = "https://loot-link.com/s?a2bd3961";
+            } else {
+                // Generate a random key from the list
+                const randomKey = keys[Math.floor(Math.random() * keys.length)];
 
-            // Display the key
-            document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
+                // Display the generated key
+                document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
 
-            // Set flag in localStorage so that we know the key has been generated
-            localStorage.setItem("keyGenerated", "true");
+                // Save the generated key in session storage
+                sessionStorage.setItem("keyGenerated", "true");
+                sessionStorage.setItem("generatedKey", randomKey);
 
-            // Redirect the user to the URL after they click the "Generate New Key" button
-            window.location.href = "https://loot-link.com/s?a2bd3961";
+                // Change the button text after key generation
+                document.querySelector(".generate-btn").innerText = "Already Generated - Click to Visit Link";
+
+                // Redirect the user to the specified URL after generating the key
+                window.location.href = "https://loot-link.com/s?a2bd3961";
+            }
         }
     </script>
 </body>
