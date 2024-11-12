@@ -80,17 +80,6 @@
             background-color: #ff3333;
             box-shadow: 0px 0px 10px rgba(255, 76, 76, 0.5);
         }
-        .bypass-message {
-            font-size: 1.3em;
-            color: #ff4c4c;
-            background: #252525;
-            border: 1px solid #444;
-            padding: 15px 30px;
-            margin-top: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(255, 76, 76, 0.3);
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -100,46 +89,35 @@
     <img src="https://i.pinimg.com/736x/23/a3/9a/23a39a843046342c3385d03f9706ee8c.jpg" alt="Dragon Logo" class="logo">
     <div class="key-display" id="key-display">Your Key: Fetching...</div>
     <button class="generate-btn" onclick="checkAccess()">Generate New Key</button>
-    <div class="bypass-message" id="bypass-message">Bypass Detected: You were not sent from the correct link.</div>
 
     <script>
         const pastebinUrl = "https://pastebin.com/raw/DiDZQ56i"; 
 
-        // The expected referrer link
-        const expectedReferrer = "https://link-target.net/1253586/dragonite-key";
-        const referrer = document.referrer;
-
-        // Check if the user is coming from the expected referrer
-        if (referrer !== expectedReferrer) {
-            document.getElementById("bypass-message").style.display = "block";  // Show bypass message
-            document.getElementById("key-display").innerText = "Bypass Detected: You cannot generate a key without coming from the correct link.";
+        // Check if the user has visited before by using localStorage
+        if (localStorage.getItem("keyGenerated")) {
+            // If the key has been generated before, display the "Can't generate key" message
+            document.getElementById("key-display").innerText = "Can't generate key. You've already received one!";
         } else {
-            checkAccess();  // Call the function to fetch a key if the referrer is correct
+            checkAccess();  // Fetch and display the key if it's the first visit
         }
 
-        // Function to fetch the key from the link
         async function checkAccess() {
             try {
                 const response = await fetch(pastebinUrl);
                 const data = await response.text();
                 const keys = data.split("\n").filter(key => key.trim() !== "");
                 const randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+                // Display the key
                 document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
+
+                // Store in localStorage so that next time we know the key has already been generated
+                localStorage.setItem("keyGenerated", "true");
             } catch (error) {
                 console.error("Error fetching keys:", error);
                 document.getElementById("key-display").innerText = "Error retrieving key.";
             }
         }
-
-        // If the user clicks the Generate New Key button
-        document.querySelector('.generate-btn').addEventListener('click', function() {
-            if (referrer === expectedReferrer) {
-                checkAccess();  // Only generate a new key if coming from the correct link
-            } else {
-                document.getElementById("bypass-message").style.display = "block";
-                document.getElementById("key-display").innerText = "Bypass Detected: You cannot generate a key without coming from the correct link.";
-            }
-        });
     </script>
 </body>
 </html>
