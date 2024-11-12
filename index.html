@@ -103,7 +103,7 @@
         // Check if key has been generated already in session storage
         if (sessionStorage.getItem("keyGenerated")) {
             // If a key was generated, show the key (do not allow re-generation)
-            document.getElementById("key-display").innerText = Your Key: ${sessionStorage.getItem("generatedKey")};
+            document.getElementById("key-display").innerText = `Your Key: ${sessionStorage.getItem("generatedKey")}`;
             document.querySelector(".generate-btn").innerText = "Already Generated - Click to Visit Link";  // Update button text
         }
 
@@ -117,7 +117,7 @@
                 const randomKey = keys[Math.floor(Math.random() * keys.length)];
 
                 // Display the generated key
-                document.getElementById("key-display").innerText = Your Key: ${randomKey};
+                document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
 
                 // Save the generated key in session storage
                 sessionStorage.setItem("keyGenerated", "true");
