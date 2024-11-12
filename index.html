@@ -3,110 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dragon Key Generator</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            overflow: hidden;
-            background: #1a1a1a;
-            color: #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: -1;
-        }
-        .title {
-            font-size: 3.5em;
-            font-weight: bold;
-            color: #ff4c4c;
-            margin-bottom: 20px;
-            text-shadow: 0px 0px 10px rgba(255, 76, 76, 0.5);
-        }
-        .logo {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 2px solid #ff4c4c;
-            padding: 10px;
-            transition: transform 0.2s ease;
-            box-shadow: 0px 0px 15px rgba(255, 76, 76, 0.8);
-        }
-        .logo:hover {
-            transform: scale(1.05);
-        }
-        .key-display {
-            font-size: 1.3em;
-            color: #e0e0e0;
-            background: #252525;
-            border: 1px solid #444;
-            padding: 15px 30px;
-            margin-top: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(255, 76, 76, 0.3);
-            transition: box-shadow 0.3s ease;
-        }
-        .key-display:hover {
-            box-shadow: 0 0 20px rgba(255, 76, 76, 0.5);
-        }
-        .generate-btn {
-            margin-top: 20px;
-            padding: 10px 25px;
-            font-size: 1.1em;
-            color: #fff;
-            background-color: #ff4c4c;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .generate-btn:hover {
-            background-color: #ff3333;
-            box-shadow: 0px 0px 10px rgba(255, 76, 76, 0.5);
-        }
-    </style>
+    <title>Dragonite Key Validator</title>
 </head>
 <body>
-
-    <div class="overlay"></div>
-    <div class="title">Dragonite Key System</div>
-    <img src="https://i.pinimg.com/736x/23/a3/9a/23a39a843046342c3385d03f9706ee8c.jpg" alt="Dragon Logo" class="logo">
-    <div class="key-display" id="key-display">Your Key: Fetching...</div>
-    <button class="generate-btn" onclick="checkAccess()">Generate New Key</button>
-
+    <h1>Dragonite Key Validation</h1>
+    <div id="bypassMessage" style="color: red; font-weight: bold;"></div>
+    <div id="keysDisplay">
+        <!-- Keys from Pastebin will be displayed here -->
+    </div>
     <script>
-        const pastebinUrl = "https://pastebin.com/raw/DiDZQ56i"; 
+        // Define the expected referrer link
+        const expectedReferrer = "https://link-target.net/1253586/dragonite-key";
 
-        async function checkAccess() {
+        // Check the referrer to see if the user came from the correct link
+        const referrer = document.referrer;
+
+        if (referrer !== expectedReferrer) {
+            document.getElementById("bypassMessage").innerText = "Bypass Detected: You were not sent from the correct link.";
+        }
+        
+        // Fetch keys from the Pastebin link (replace with your actual Pastebin link)
+        const pastebinUrl = "https://pastebin.com/raw/DiDZQ56i";  // Replace with your Pastebin raw URL
+
+        // Function to fetch and display keys from Pastebin
+        async function fetchAndDisplayKeys() {
             try {
                 const response = await fetch(pastebinUrl);
-                const data = await response.text();
-                const keys = data.split("\n").filter(key => key.trim() !== "");
-                const randomKey = keys[Math.floor(Math.random() * keys.length)];
-                document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
+                const keys = await response.text();
+
+                // Display the keys in the 'keysDisplay' div
+                document.getElementById("keysDisplay").innerText = "Keys:\n" + keys;
             } catch (error) {
                 console.error("Error fetching keys:", error);
-                document.getElementById("key-display").innerText = "Error retrieving key.";
+                document.getElementById("keysDisplay").innerText = "Failed to load keys.";
             }
         }
 
-        checkAccess();
+        // Call the function to display the keys
+        fetchAndDisplayKeys();
     </script>
 </body>
 </html>
