@@ -80,6 +80,11 @@
             background-color: #ff3333;
             box-shadow: 0px 0px 10px rgba(255, 76, 76, 0.5);
         }
+        .timer {
+            font-size: 1.2em;
+            color: #ffcc00;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +92,8 @@
     <div class="overlay"></div>
     <div class="title">Dragonite Key System</div>
     <img src="https://i.pinimg.com/736x/23/a3/9a/23a39a843046342c3385d03f9706ee8c.jpg" alt="Dragon Logo" class="logo">
-    <div class="key-display" id="key-display">Your Key: Waiting...</div>
+    <div class="key-display" id="key-display">Please finish the task to get the key.</div>
+    <div class="timer" id="timer"></div>
     <button class="generate-btn" onclick="generateKey()">Generate Key</button>
 
     <script>
@@ -110,24 +116,38 @@
         function generateKey() {
             // Check if key is already generated during this session
             if (sessionStorage.getItem("keyGenerated")) {
-                // If key is already generated, just redirect the user
-                window.location.href = "https://loot-link.com/s?a2bd3961";
+                // If key is already generated, just open the link in a new tab
+                window.open("https://loot-link.com/s?a2bd3961", "_blank");
             } else {
-                // Generate a random key from the list
-                const randomKey = keys[Math.floor(Math.random() * keys.length)];
+                // Start a 20 second countdown timer
+                let countdown = 20;
+                const timerElement = document.getElementById("timer");
+                timerElement.innerText = `Please wait... ${countdown}s remaining`;
 
-                // Display the generated key
-                document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
+                const interval = setInterval(() => {
+                    countdown--;
+                    timerElement.innerText = `Please wait... ${countdown}s remaining`;
 
-                // Save the generated key in session storage
-                sessionStorage.setItem("keyGenerated", "true");
-                sessionStorage.setItem("generatedKey", randomKey);
+                    if (countdown <= 0) {
+                        clearInterval(interval);
 
-                // Change the button text after key generation
-                document.querySelector(".generate-btn").innerText = "Already Generated - Click to Visit Link";
+                        // Generate a random key from the list
+                        const randomKey = keys[Math.floor(Math.random() * keys.length)];
 
-                // Redirect the user to the specified URL after generating the key
-                window.location.href = "https://loot-link.com/s?a2bd3961";
+                        // Display the generated key
+                        document.getElementById("key-display").innerText = `Your Key: ${randomKey}`;
+
+                        // Save the generated key in session storage
+                        sessionStorage.setItem("keyGenerated", "true");
+                        sessionStorage.setItem("generatedKey", randomKey);
+
+                        // Change the button text after key generation
+                        document.querySelector(".generate-btn").innerText = "Already Generated - Click to Visit Link";
+
+                        // Open the link in a new tab
+                        window.open("https://loot-link.com/s?a2bd3961", "_blank");
+                    }
+                }, 1000);
             }
         }
     </script>
